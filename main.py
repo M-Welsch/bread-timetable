@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from collections import OrderedDict
-import pandas as pd
 
 from recipe import Recipe
+
 
 recipes = {
     "Dinkelbrot": OrderedDict({
