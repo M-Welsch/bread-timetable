@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from collections import OrderedDict
+import pandas as pd
 
 from recipe import Recipe
 
@@ -25,5 +26,6 @@ in_oven_times = {
 if __name__ == "__main__":
     recipe = Recipe(recipes["Dinkelbrot"])
     timetable = recipe.timetable(in_oven_times["Dinkelbrot"])
-    for item in timetable:
-        print(item)
+    for index, row in timetable.sort_values('time').iterrows():
+        steptime: datetime = row.time
+        print(f"{steptime.strftime('%d.%m.%Y %H:%M:%S')}: {row.instruction}")
