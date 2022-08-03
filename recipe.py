@@ -1,11 +1,39 @@
+from collections import OrderedDict
 from datetime import timedelta, datetime
+from enum import Enum
 from typing import Dict, List
 import pandas as pd
 
 
+class Recipes(Enum):
+    DinkelQuarkBrot = "Dinkel-Quark-Brot"
+    Haferbrot = "Haferbrot"
+
+
+recipes = {
+    Recipes.DinkelQuarkBrot: OrderedDict({
+        "Sauerteig, Kochstück machen": timedelta(minutes=10),
+        "Sauerteig, Kochstück reifen lassen": timedelta(hours=16),
+        "Hauptteig machen": timedelta(minutes=30),
+        "Hauptteig gehen lassen 1": timedelta(minutes=60),
+        "Rundwirken": timedelta(minutes=5),
+        "Garen": timedelta(minutes=45),
+    }),
+    Recipes.Haferbrot: OrderedDict({
+        "Sauerteig zusammenrühren": timedelta(minutes=5),
+        "Sauerteig reifen lassen": timedelta(hours=4),
+        "Brühstück machen": timedelta(minutes=5),
+        "Brühstück reifen lassen": timedelta(hours=12),
+        "Hauptteig machen": timedelta(minutes=20),
+        "Garen lassen": timedelta(minutes=60)
+    })
+}
+
+
 class Recipe:
-    def __init__(self, recipe: Dict[str, timedelta]) -> None:
-        self._recipe = recipe
+    def __init__(self, recipe: Recipes) -> None:
+        self._recipe_name = recipe.value
+        self._recipe: Dict[str, timedelta] = recipes[recipe]
 
     def timetable(self, in_oven_time: datetime) -> pd.DataFrame:
         start_time = self.start_time(in_oven_time)
@@ -19,7 +47,8 @@ class Recipe:
             instructions.append(step)
         return pd.DataFrame({
             "time": step_times,
-            "instruction": instructions
+            "instruction": instructions,
+            "recipe": self._recipe_name
         })
 
     def start_time(self, in_oven_time: datetime) -> datetime:
@@ -28,3 +57,5 @@ class Recipe:
             total_timedelta += td
         time_for_last_step = list(self._recipe.values())[-1]
         return in_oven_time - total_timedelta - time_for_last_step
+
+
