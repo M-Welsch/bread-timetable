@@ -9,11 +9,13 @@ in_oven_times = {Recipes.DinkelQuarkBrot: datetime(2022, 8, 4, 13), Recipes.Hafe
 
 if __name__ == "__main__":
     dinkelquarkbrot = Recipe(Recipes.DinkelQuarkBrot)
+    dinkelkastenbrot = Recipe(Recipes.DinkelKastenBrot)
     haferbrot = Recipe(Recipes.Haferbrot)
     timetable = pd.concat(
         [
             dinkelquarkbrot.timetable(in_oven_times[Recipes.DinkelQuarkBrot]),
             haferbrot.timetable(in_oven_times[Recipes.Haferbrot]),
+            dinkelkastenbrot.timetable(in_oven_times[Recipes.Haferbrot]),
         ]
     )
     for index, row in timetable.sort_values("time").iterrows():

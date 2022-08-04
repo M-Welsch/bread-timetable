@@ -8,6 +8,7 @@ import pandas as pd
 
 class Recipes(Enum):
     DinkelQuarkBrot = "Dinkel-Quark-Brot"
+    DinkelKastenBrot = "Dinkel Kastenbrot"
     Haferbrot = "Haferbrot"
 
 
@@ -30,6 +31,19 @@ recipes = {
             "Brühstück reifen lassen": timedelta(hours=12),
             "Hauptteig machen": timedelta(minutes=20),
             "Garen lassen": timedelta(minutes=60),
+        }
+    ),
+    Recipes.DinkelKastenBrot: OrderedDict(
+        {
+            "Vorteig, Quellstück machen": timedelta(hours=12),
+            "Teig mischen": timedelta(minutes=15),
+            "Teig ruhen lassen 1": timedelta(minutes=28),
+            "Dehnen und Falten 1": timedelta(minutes=2),
+            "Teig ruhen lassen 2": timedelta(minutes=28),
+            "Dehnen und Falten 2": timedelta(minutes=2),
+            "Teig ruhen lassen 3": timedelta(minutes=30),
+            "Langwirken, in Kastenform": timedelta(minutes=5),
+            "Reifen lassen": timedelta(minutes=90),
         }
     ),
 }
