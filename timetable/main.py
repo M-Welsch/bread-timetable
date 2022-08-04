@@ -4,7 +4,7 @@ import pandas as pd
 
 from timetable.recipe import Recipe, Recipes
 
-in_oven_times = {Recipes.DinkelQuarkBrot: datetime(2022, 8, 4, 13), Recipes.Haferbrot: datetime(2022, 8, 4, 14)}
+in_oven_times = {Recipes.DinkelQuarkBrot: datetime(2022, 8, 5, 13), Recipes.Haferbrot: datetime(2022, 8, 5, 14)}
 
 
 if __name__ == "__main__":
