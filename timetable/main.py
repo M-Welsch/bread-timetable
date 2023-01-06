@@ -13,11 +13,14 @@ in_oven_times = {
 def main_new():
     timetable = pd.concat(
         [
-            timetable_for_recipe(Recipes.DinkelQuarkBrot_2kg, in_oven_times[Recipes.Haferbrot_2kg])
+            timetable_for_recipe(Recipes.DinkelQuarkBrot_2kg, in_oven_times[Recipes.Haferbrot_2kg]),
+            timetable_for_recipe(Recipes.Haferbrot_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2)
         ]
     )
     for index, row in timetable.sort_values("time").iterrows():
         steptime: datetime = row.time
+        if not row.instruction:
+            continue
         print(f"{steptime.strftime('%d.%m.%Y %H:%M:%S')}: {row.recipe} - {row.instruction}", end="")
         if row.ingredients:
             print(f": {row.ingredients}")

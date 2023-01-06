@@ -63,6 +63,27 @@ recipes_new = {
         Step(kind=StepKind.WARTEN, duration=timedelta(minutes=60)),
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Rundwirken"),
         Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45), instructions="Garen lassen")
+    ],
+    Recipes.Haferbrot_1kg: [
+        Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Sauerteig machen", [
+            Ingredient(133, "g", "Haferf. fein"),
+            Ingredient(166, "g", "Wasser (50°C)"),
+            Ingredient(26.7, "g", "AG"),
+            Ingredient(3.3, "g", "Salz"),
+        ]),
+        Step(StepKind.WARTEN, timedelta(hours=8), "Sauerteig reifen lassen"),
+        Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Brühstück machen", [
+            Ingredient(133, "g", "Haferfl. kernig"),
+            Ingredient(266, "g", "Wasser"),
+            Ingredient(11.3, "g", "Salz"),
+        ]),
+        Step(StepKind.WARTEN, timedelta(hours=4)),
+        Step(StepKind.VERARBEITUNG, timedelta(minutes=20), "Hauptteig machen", [
+            Ingredient(400, "g", "Haferfl. kernig"),
+            Ingredient(266, "g", "Wasser, dann 133g Wasser jew. 40°"),
+            Ingredient(6.7, "g", "Hefe"),
+        ]),
+        Step(StepKind.WARTEN, timedelta(minutes=60))
     ]
 }
 
@@ -159,7 +180,14 @@ def calculate_start_time(steps: List[Step], in_oven_time: datetime) -> datetime:
     return in_oven_time - total_timedelta  # - time_for_last_step
 
 
-def timetable_for_recipe(recipe_name: Recipes, in_oven_time: datetime) -> pd.DataFrame:
+def compose_ingredients(step: Step, multiplier: float) -> str:
+    if step.ingredients is not None:
+        return ", ".join([f"{ing.amount * multiplier}{ing.unit} {ing.name}" for ing in step.ingredients])
+    else:
+        return ""
+
+
+def timetable_for_recipe(recipe_name: Recipes, in_oven_time: datetime, multiplier: float = 1) -> pd.DataFrame:
     start_time = calculate_start_time(recipes_new[recipe_name], in_oven_time)
     time_elapsed = timedelta()
     step_times = []
@@ -171,10 +199,7 @@ def timetable_for_recipe(recipe_name: Recipes, in_oven_time: datetime) -> pd.Dat
         time_elapsed += time_needed
         step_time = start_time + time_elapsed
         step_times.append(step_time-time_needed)
-        if step.ingredients is not None:
-            ingredients = ", ".join([f"{ing.amount}{ing.unit} {ing.name}" for ing in step.ingredients])
-        else:
-            ingredients = ""
+        ingredients = compose_ingredients(step, multiplier)
         df = pd.concat([df, pd.DataFrame(
             {"time": [step_time], "instruction": [step.instructions], "ingredients": [ingredients], "recipe": [recipe_name.value], "recipe_id": recipe_name, "step_kind": step.kind, "duration": step.duration}
         )])
