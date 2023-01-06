@@ -1,19 +1,43 @@
 from collections import OrderedDict
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Dict, List
+from typing import Dict, Optional
 
 import pandas as pd
 
 
 class Recipes(Enum):
-    DinkelQuarkBrot = "Dinkel-Quark-Brot"
+    Holzofen = "Holzofen Vorbereitung"
+    DinkelQuarkBrot_2kg = "Dinkel-Quark-Brot"
     DinkelKastenBrot = "Dinkel Kastenbrot"
-    Haferbrot = "Haferbrot"
+    Haferbrot_1kg = "Haferbrot pro 1kg"
+    Haferbrot_2kg = "Haferbrot 2kg"
+    Haferbrot_3kg = "Haferbrot 3kg"
+    Auffrischbrot = "Auffrischbrot"
+    SauerteigBroetchen = "Sauerteigbrötchen"
+    RoggenvollkornbrotMitRoestbrot_per_2kg = "Roggenvollkornbrot mit Röstbrot"
+
+
+class StepKind(Enum):
+    VERARBEITUNG: str = "VERARBEITUNG"
+    WARTEN: str = "WARTEN"
+
+
+@dataclass
+class Step:
+    kind: StepKind
+    duration: Optional[timedelta] = None
 
 
 recipes = {
-    Recipes.DinkelQuarkBrot: OrderedDict(
+    Recipes.Holzofen: OrderedDict({
+        "Abbrandphase: 1/3 Holz in vorderer Hälfte abbrennen. Ofentür in erste Rastung, 30min warten": timedelta(minutes=30),
+        "Abbrandphase: weiteres 1/3 Holz auf die Glut, 30min warten": timedelta(minutes=30),
+        "Glut überall verteilen, letztes 1/3 Holz drauf, 60min warten, Glut mehrmals aufhacken": timedelta(hours=1),
+        "Sauber kehren, Tür zu. Pizza backen. Nach 1h Brot möglich": timedelta(hours=1)
+    }),
+    Recipes.DinkelQuarkBrot_2kg: OrderedDict(
         {
             "Sauerteig (100g Roggen, 100g Wasser, 10g AG), Kochstück machen (190 Dinkelschrot, 460ml Wasser)": timedelta(minutes=10),
             "Sauerteig, Kochstück reifen lassen": timedelta(hours=16),
@@ -23,13 +47,33 @@ recipes = {
             "Garen": timedelta(minutes=45),
         }
     ),
-    Recipes.Haferbrot: OrderedDict(
+    Recipes.Haferbrot_1kg: OrderedDict(
         {
             "Sauerteig zusammenrühren (133g Haferf. fein, 166g Wasser (50°C), 26,7g AG, 3,3g Salz)": timedelta(minutes=5),
-            "Sauerteig reifen lassen": timedelta(hours=4),
+            "Sauerteig reifen lassen": timedelta(hours=8),
             "Brühstück machen (133g Haferfl. kernig, 266g Wasser, 11,3g Salz)": timedelta(minutes=5),
-            "Brühstück reifen lassen": timedelta(hours=12),
+            "Brühstück reifen lassen": timedelta(hours=4),
             "Hauptteig machen (400g Haferfl. kernig, 266g Wasser, dann 133g Wasser jew. 40°, 6,7g Hefe)": timedelta(minutes=20),
+            "Garen lassen": timedelta(minutes=60),
+        }
+    ),
+    Recipes.Haferbrot_2kg: OrderedDict(
+        {
+            f"Sauerteig zusammenrühren ({133*2}g Haferf. fein, {166*2}g Wasser (50°C), {2*26.7}g AG, {2*3.3}g Salz)": timedelta(minutes=5),
+            "Sauerteig reifen lassen": timedelta(hours=8),
+            f"Brühstück machen ({2*133}g Haferfl. kernig, {2*266}g Wasser, {2*11.3}g Salz)": timedelta(minutes=5),
+            "Brühstück reifen lassen": timedelta(hours=4),
+            f"Hauptteig machen ({2*400}g Haferfl. kernig, {2*266}g Wasser, dann {2*133}g Wasser jew. 40°, {2*6.7}g Hefe)": timedelta(minutes=20),
+            "Garen lassen": timedelta(minutes=60),
+        }
+    ),
+    Recipes.Haferbrot_3kg: OrderedDict(
+        {
+            f"Sauerteig zusammenrühren ({133*3}g Haferf. fein, {166*3}g Wasser (50°C), {3*26.7}g AG, {3*3.3}g Salz)": timedelta(minutes=5),
+            "Sauerteig reifen lassen": timedelta(hours=8),
+            f"Brühstück machen ({3*133}g Haferfl. kernig, {3*266}g Wasser, {3*11.3}g Salz)": timedelta(minutes=5),
+            "Brühstück reifen lassen": timedelta(hours=4),
+            f"Hauptteig machen ({3*400}g Haferfl. kernig, {3*266}g Wasser, dann {3*133}g Wasser jew. 40°, {3*6.7}g Hefe)": timedelta(minutes=20),
             "Garen lassen": timedelta(minutes=60),
         }
     ),
@@ -46,6 +90,29 @@ recipes = {
             "Reifen lassen": timedelta(minutes=90),
         }
     ),
+    Recipes.Auffrischbrot: OrderedDict(
+        {
+            "Erste Autolyse: 350g AG, 595g Wasser (25°C)": timedelta(minutes=30),
+            "Zweite Autolyse: erste Autolyse, 840g Mehl": timedelta(minutes=30),
+            "Hauptteig: Zw. Autolyse, 3,5g Hefe, 21g Salz": timedelta(minutes=40),
+            "In Kühlschrnak": timedelta(hours=10),
+            "Garen lassen": timedelta(minutes=60)
+        }
+    ),
+    Recipes.SauerteigBroetchen: OrderedDict({
+        "Sauerteig machen (20g AG, 25g Weizen T550, 20g Wasser), 4h stehen lassen": timedelta(hours=4),
+        "Vorteig verrühren (585g Weizen T550, 395g Wasser), 30min stehen lassen": timedelta(minutes=30),
+        "Hauptteig (Sauerteig, Vorteig) verkneten, dann 15g Salz dazu, nochmal kneten. 6h ruhen lassen)": timedelta(hours=6),
+        "9 Teiglinge formen, 60-90min ruhen lassen. Dann 25min bei 250°C OU Hitze backen": timedelta(minutes=60),
+
+    }),
+    Recipes.RoggenvollkornbrotMitRoestbrot_per_2kg: OrderedDict({
+        "Sauerteig und Brühstück machen (ST: 400g RoggenVKMehl, 400g Wasser (50°), 80g ASG, 8g Salz) (BS: 150g Röstbrot, 14g Salz, 450g Wasser (100°)), 12h stehen lassen": timedelta(minutes=10),
+        "ST und BS 12h ruhen lassen": timedelta(hours=12),
+        "Hauptteig machen (ST, BS, 560g RoggenVKMehl, 220g Wasser (100°)": timedelta(minutes=20),
+        "Hauptteig 30min ruhen lassen": timedelta(minutes=30),
+        "Im Gärkorb 1,5h reifen lassen": timedelta(minutes=90)
+    })
 }
 
 
