@@ -3,18 +3,21 @@ from pathlib import Path
 
 import pandas as pd
 
-from timetable.bread_calendar import save_calendar, create_calendar_new
-from timetable.recipe import Recipe, Recipes, timetable_for_recipe
+from timetable.bread_calendar import create_calendar
+from timetable.recipe import Recipes, timetable_for_recipe
 
 in_oven_times = {
     Recipes.Haferbrot_2kg: datetime(2023, 1, 7, 13)
 }
 
-def main_new():
+
+def main():
     timetable = pd.concat(
         [
             timetable_for_recipe(Recipes.DinkelQuarkBrot_2kg, in_oven_times[Recipes.Haferbrot_2kg]),
-            timetable_for_recipe(Recipes.Haferbrot_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2)
+            timetable_for_recipe(Recipes.Haferbrot_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
+            timetable_for_recipe(Recipes.RoggenvollkornbrotMitRoestbrot_per_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
+            timetable_for_recipe(Recipes.Holzofen, in_oven_times[Recipes.Haferbrot_2kg])
         ]
     )
     for index, row in timetable.sort_values("time").iterrows():
@@ -27,27 +30,8 @@ def main_new():
         else:
             print("")
     with open("cal.ics", "wb") as f:
-        f.write(create_calendar_new(timetable))
-
-
-def main():
-    dinkelquarkbrot = Recipe(Recipes.DinkelQuarkBrot_2kg)
-    haferbrot = Recipe(Recipes.Haferbrot_2kg)
-    roggenvk = Recipe(Recipes.RoggenvollkornbrotMitRoestbrot_per_2kg)
-    holzofen_vorbereitung = Recipe(Recipes.Holzofen)
-    timetable = pd.concat(
-        [
-            holzofen_vorbereitung.timetable(in_oven_times[Recipes.Haferbrot_2kg]),
-            dinkelquarkbrot.timetable(in_oven_times[Recipes.Haferbrot_2kg]),
-            haferbrot.timetable(in_oven_times[Recipes.Haferbrot_2kg]),
-            roggenvk.timetable(in_oven_times[Recipes.Haferbrot_2kg])
-        ]
-    )
-    for index, row in timetable.sort_values("time").iterrows():
-        steptime: datetime = row.time
-        print(f"{steptime.strftime('%d.%m.%Y %H:%M:%S')}: {row.recipe} - {row.instruction}")
-    save_calendar(Path("cal.ics"), timetable)
+        f.write(create_calendar(timetable))
 
 
 if __name__ == "__main__":
-    main_new()
+    main()
