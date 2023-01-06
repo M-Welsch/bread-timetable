@@ -171,10 +171,14 @@ def timetable_for_recipe(recipe_name: Recipes, in_oven_time: datetime) -> pd.Dat
         time_elapsed += time_needed
         step_time = start_time + time_elapsed
         step_times.append(step_time-time_needed)
-        ingredients = ", ".join([f"{ing.amount}{ing.unit} {ing.name}" for ing in step.ingredients])
+        if step.ingredients is not None:
+            ingredients = ", ".join([f"{ing.amount}{ing.unit} {ing.name}" for ing in step.ingredients])
+        else:
+            ingredients = ""
         df = pd.concat([df, pd.DataFrame(
-            {"time": [step_time], "instruction": [step.instructions], "ingredients": [ingredients], "recipe": [recipe_name]}
+            {"time": [step_time], "instruction": [step.instructions], "ingredients": [ingredients], "recipe": [recipe_name.value], "recipe_id": recipe_name, "step_kind": step.kind, "duration": step.duration}
         )])
+    return df
 
 
 class Recipe:
