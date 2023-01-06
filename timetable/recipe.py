@@ -43,7 +43,7 @@ class Step:
 recipes = {
     Recipes.DinkelQuarkBrot_2kg: [
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Sauerteig machen", ingredients=[
-            Ingredient(100, "g", "Roggen"),
+            Ingredient(100, "g", "Roggenmehl Type 1150"),
             Ingredient(100, "g", "Wasser"),
             Ingredient(10, "g", "Anstellgut")
         ]),
@@ -67,20 +67,20 @@ recipes = {
     ],
     Recipes.Haferbrot_1kg: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Sauerteig machen", [
-            Ingredient(133, "g", "Haferf. fein"),
+            Ingredient(133, "g", "Haferflocken fein"),
             Ingredient(166, "g", "Wasser (50°C)"),
-            Ingredient(26.7, "g", "AG"),
+            Ingredient(26.7, "g", "Anstellgut"),
             Ingredient(3.3, "g", "Salz"),
         ]),
         Step(StepKind.WARTEN, timedelta(hours=8), "Sauerteig reifen lassen"),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Brühstück machen", [
-            Ingredient(133, "g", "Haferfl. kernig"),
+            Ingredient(133, "g", "Haferflocken kernig"),
             Ingredient(266, "g", "Wasser"),
             Ingredient(11.3, "g", "Salz"),
         ]),
         Step(StepKind.WARTEN, timedelta(hours=4)),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=20), "Hauptteig machen", [
-            Ingredient(400, "g", "Haferfl. kernig"),
+            Ingredient(400, "g", "Haferflocken kernig"),
             Ingredient(266, "g", "Wasser, dann 133g Wasser jew. 40°"),
             Ingredient(6.7, "g", "Hefe"),
         ]),
@@ -88,9 +88,9 @@ recipes = {
     ],
     Recipes.RoggenvollkornbrotMitRoestbrot_per_1kg: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Sauerteig machen", [
-            Ingredient(200, "g", "RoggenVKMehl"),
+            Ingredient(200, "g", "Roggenvollkornmehl"),
             Ingredient(200, "g", "Wasser (50°)"),
-            Ingredient(40, "g", "ASG"),
+            Ingredient(40, "g", "Anstellgut"),
             Ingredient(4, "g", "Salz"),
         ]),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Brühstück machen", [
@@ -102,7 +102,7 @@ recipes = {
         Step(StepKind.VERARBEITUNG, timedelta(minutes=20), "Hauptteig machen", [
             Ingredient(444, "g", "Sauerteig"),
             Ingredient(307, "g", "Brühstück"),
-            Ingredient(560, "g", "RoggenVKMehl"),
+            Ingredient(560, "g", "Roggenvollkornmehl"),
             Ingredient(220, "g", "Wasser (100°C)"),
         ]),
         Step(StepKind.WARTEN, timedelta(minutes=30)),
@@ -197,3 +197,16 @@ def timetable_for_recipe(recipe_name: Recipes, in_oven_time: datetime, multiplie
             {"time": [step_time], "instruction": [step.instructions], "ingredients": [ingredients], "recipe": [recipe_name.value], "recipe_id": recipe_name, "step_kind": step.kind, "duration": step.duration}
         )])
     return df
+
+
+def total_ingredients_for_recipe(recipe_name: Recipes) -> Dict[str, float]:
+    total_ingredients = {}
+    for step in recipes[recipe_name]:
+        if step.ingredients is None:
+            continue
+        for ingredient in step.ingredients:
+            try:
+                total_ingredients[ingredient.name] += ingredient.amount
+            except KeyError:
+                total_ingredients[ingredient.name] = ingredient.amount
+    return total_ingredients
