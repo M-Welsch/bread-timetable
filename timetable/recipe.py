@@ -2,7 +2,7 @@ from collections import OrderedDict
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 import pandas as pd
 
@@ -25,10 +25,46 @@ class StepKind(Enum):
 
 
 @dataclass
+class Ingredient:
+    amount: float
+    unit: str
+    name: str
+
+
+@dataclass
 class Step:
     kind: StepKind
-    duration: Optional[timedelta] = None
+    duration: timedelta
+    instructions: Optional[str] = None
+    ingredients: Optional[List[Ingredient]] = None
 
+
+recipes_new = {
+    Recipes.DinkelQuarkBrot_2kg: [
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Sauerteig machen", ingredients=[
+            Ingredient(100, "g", "Roggen"),
+            Ingredient(100, "g", "Wasser"),
+            Ingredient(10, "g", "Anstellgut")
+        ]),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Kochstück machen", ingredients=[
+            Ingredient(190, "g", "Dinkelschrot"),
+            Ingredient(460, "ml", "Wasser")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=16)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=30), instructions="Hauptteig machen", ingredients=[
+            Ingredient(80, "g", "Sesam"),
+            Ingredient(100, "g", "Joghurt"),
+            Ingredient(560, "g", "Dinkelmehl Type 630"),
+            Ingredient(100, "g", "Roggenmehl Type 1150"),
+            Ingredient(24, "g", "Salz"),
+            Ingredient(16, "g", "Hefe"),
+            Ingredient(100, "ml", "Wasser")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=60)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Rundwirken"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45), instructions="Garen lassen")
+    ]
+}
 
 recipes = {
     Recipes.Holzofen: OrderedDict({
@@ -114,6 +150,31 @@ recipes = {
         "Im Gärkorb 1,5h reifen lassen": timedelta(minutes=90)
     })
 }
+
+
+def calculate_start_time(steps: List[Step], in_oven_time: datetime) -> datetime:
+    total_timedelta = timedelta()
+    for td in [step.duration for step in steps]:
+        total_timedelta += td
+    return in_oven_time - total_timedelta  # - time_for_last_step
+
+
+def timetable_for_recipe(recipe_name: Recipes, in_oven_time: datetime) -> pd.DataFrame:
+    start_time = calculate_start_time(recipes_new[recipe_name], in_oven_time)
+    time_elapsed = timedelta()
+    step_times = []
+    df = pd.DataFrame(
+        {"time": [], "instruction": [], "ingredients": [], "recipe": []}
+    )
+    for step in recipes_new[recipe_name]:
+        time_needed = step.duration
+        time_elapsed += time_needed
+        step_time = start_time + time_elapsed
+        step_times.append(step_time-time_needed)
+        ingredients = ", ".join([f"{ing.amount}{ing.unit} {ing.name}" for ing in step.ingredients])
+        df = pd.concat([df, pd.DataFrame(
+            {"time": [step_time], "instruction": [step.instructions], "ingredients": [ingredients], "recipe": [recipe_name]}
+        )])
 
 
 class Recipe:

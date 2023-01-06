@@ -11,7 +11,20 @@ in_oven_times = {
 }
 
 
-if __name__ == "__main__":
+def main_new():
+    dinkelquarkbrot = Recipe(Recipes.DinkelQuarkBrot_2kg)
+    timetable = pd.concat(
+        [
+            dinkelquarkbrot.timetable(in_oven_times[Recipes.Haferbrot_2kg])
+        ]
+    )
+    for index, row in timetable.sort_values("time").iterrows():
+        steptime: datetime = row.time
+        print(f"{steptime.strftime('%d.%m.%Y %H:%M:%S')}: {row.recipe} - {row.instruction}")
+    save_calendar(Path("cal.ics"), timetable)
+
+
+def main():
     dinkelquarkbrot = Recipe(Recipes.DinkelQuarkBrot_2kg)
     haferbrot = Recipe(Recipes.Haferbrot_2kg)
     roggenvk = Recipe(Recipes.RoggenvollkornbrotMitRoestbrot_per_2kg)
@@ -29,3 +42,7 @@ if __name__ == "__main__":
         print(f"{steptime.strftime('%d.%m.%Y %H:%M:%S')}: {row.recipe} - {row.instruction}")
     save_calendar(Path("cal.ics"), timetable)
 
+
+
+if __name__ == "__main__":
+    main_new()
