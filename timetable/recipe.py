@@ -7,17 +7,24 @@ from typing import Dict, Optional, List
 import pandas as pd
 
 
+@dataclass
+class RecipeData:
+    name: str
+    url: str
+
+
 class Recipes(Enum):
-    Holzofen = "Holzofen Vorbereitung"
-    DinkelQuarkBrot_2kg = "Dinkel-Quark-Brot"
-    DinkelKastenBrot = "Dinkel Kastenbrot"
-    Haferbrot_1kg = "Haferbrot pro 1kg"
-    Haferbrot_2kg = "Haferbrot 2kg"
-    Haferbrot_3kg = "Haferbrot 3kg"
-    Auffrischbrot = "Auffrischbrot"
-    SauerteigBroetchen = "Sauerteigbrötchen"
-    RoggenvollkornbrotMitRoestbrot_per_1kg = "Roggenvollkornbrot mit Röstbrot"
-    RoggenvollkornbrotMitRoestbrot_per_2kg = "Roggenvollkornbrot mit Röstbrot"
+    Holzofen = RecipeData("Holzofen Vorbereitung", "http://")
+    DinkelQuarkBrot_2kg = RecipeData("Dinkel-Quark-Brot", "http://")
+    DinkelKastenBrot = RecipeData("Dinkel Kastenbrot", "http://")
+    Haferbrot_1kg = RecipeData("Haferbrot pro 1kg", "http://")
+    Haferbrot_2kg = RecipeData("Haferbrot 2kg", "http://")
+    Haferbrot_3kg = RecipeData("Haferbrot 3kg", "http://")
+    Auffrischbrot = RecipeData("Auffrischbrot", "http://")
+    SauerteigBroetchen = RecipeData("Sauerteigbrötchen", "http://")
+    RoggenvollkornbrotMitRoestbrot_per_1kg = RecipeData("Roggenvollkornbrot mit Röstbrot", "http://")
+    RoggenvollkornbrotMitRoestbrot_per_2kg = RecipeData("Roggenvollkornbrot mit Röstbrot", "http://")
+    RustikalesMischbrot = RecipeData("Rustikales Mischbrot", "http://")
 
 
 class StepKind(Enum):
@@ -44,7 +51,7 @@ recipes = {
     Recipes.DinkelQuarkBrot_2kg: [
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Sauerteig machen", ingredients=[
             Ingredient(100, "g", "Roggenmehl Type 1150"),
-            Ingredient(100, "g", "Wasser"),
+            Ingredient(100, "ml", "Wasser"),
             Ingredient(10, "g", "Anstellgut")
         ]),
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Kochstück machen", ingredients=[
@@ -68,20 +75,20 @@ recipes = {
     Recipes.Haferbrot_1kg: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Sauerteig machen", [
             Ingredient(133, "g", "Haferflocken fein"),
-            Ingredient(166, "g", "Wasser (50°C)"),
+            Ingredient(166, "ml", "Wasser (50°C)"),
             Ingredient(26.7, "g", "Anstellgut"),
             Ingredient(3.3, "g", "Salz"),
         ]),
         Step(StepKind.WARTEN, timedelta(hours=8), "Sauerteig reifen lassen"),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Brühstück machen", [
             Ingredient(133, "g", "Haferflocken kernig"),
-            Ingredient(266, "g", "Wasser"),
+            Ingredient(266, "ml", "Wasser"),
             Ingredient(11.3, "g", "Salz"),
         ]),
         Step(StepKind.WARTEN, timedelta(hours=4)),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=20), "Hauptteig machen", [
             Ingredient(400, "g", "Haferflocken kernig"),
-            Ingredient(266, "g", "Wasser, dann 133g Wasser jew. 40°"),
+            Ingredient(266, "ml", "Wasser, dann 133g Wasser jew. 40°"),
             Ingredient(6.7, "g", "Hefe"),
         ]),
         Step(StepKind.WARTEN, timedelta(minutes=60))
@@ -89,21 +96,21 @@ recipes = {
     Recipes.RoggenvollkornbrotMitRoestbrot_per_1kg: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Sauerteig machen", [
             Ingredient(200, "g", "Roggenvollkornmehl"),
-            Ingredient(200, "g", "Wasser (50°)"),
+            Ingredient(200, "ml", "Wasser (50°)"),
             Ingredient(40, "g", "Anstellgut"),
             Ingredient(4, "g", "Salz"),
         ]),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Brühstück machen", [
             Ingredient(75, "g", "Röstbrot"),
             Ingredient(7, "g", "Salz"),
-            Ingredient(225, "g", "Wasser (100°C)"),
+            Ingredient(225, "ml", "Wasser (100°C)"),
         ]),
         Step(StepKind.WARTEN, timedelta(hours=12)),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=20), "Hauptteig machen", [
             Ingredient(444, "g", "Sauerteig"),
             Ingredient(307, "g", "Brühstück"),
             Ingredient(560, "g", "Roggenvollkornmehl"),
-            Ingredient(220, "g", "Wasser (100°C)"),
+            Ingredient(220, "ml", "Wasser (100°C)"),
         ]),
         Step(StepKind.WARTEN, timedelta(minutes=30)),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=10), "Rundwirken und in Gärkorb rein"),
@@ -124,6 +131,30 @@ recipes = {
         Step(StepKind.WARTEN, timedelta(minutes=60)),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=2), "Sauber kehren, Tür zu"),
         Step(StepKind.WARTEN, timedelta(minutes=60))
+    ],
+    Recipes.RustikalesMischbrot: [
+        Step(StepKind.VERARBEITUNG, timedelta(minutes=10), "Sauerteig machen", [
+            Ingredient(400, "g", "Roggenmehl Type 1150"),
+            Ingredient(400, "ml", "Wasser (50°C)"),
+            Ingredient(80, "g", "Anstellgut"),
+            Ingredient(8, "g", "Salz")
+        ]),
+        Step(StepKind.VERARBEITUNG, timedelta(minutes=10), "Vorteig machen", [
+            Ingredient(100, "g", "Dinkelvollkornmehl"),
+            Ingredient(50, "ml", "Wasser (kalt)"),
+            Ingredient(1, "g", "Hefe")
+        ]),
+        Step(StepKind.WARTEN, timedelta(hours=16)),
+        Step(StepKind.VERARBEITUNG, timedelta(minutes=15), "kneten", [
+            Ingredient(460, "g", "Weizenmehl Type 1050"),
+            Ingredient(200, "ml", "Wasser (35°C)"),
+            Ingredient(13, "g", "Salz")
+        ]),
+        Step(StepKind.WARTEN, timedelta(minutes=30)),
+        Step(StepKind.VERARBEITUNG, timedelta(minutes=2), "Dehnen und Falten"),
+        Step(StepKind.WARTEN, timedelta(minutes=30)),
+        Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "In Gärkorb"),
+        Step(StepKind.WARTEN, timedelta(minutes=75)),
     ]
 }
 
@@ -194,7 +225,7 @@ def timetable_for_recipe(recipe_name: Recipes, in_oven_time: datetime, multiplie
         step_times.append(step_time-time_needed)
         ingredients = compose_ingredients(step, multiplier)
         df = pd.concat([df, pd.DataFrame(
-            {"time": [step_time], "instruction": [step.instructions], "ingredients": [ingredients], "recipe": [recipe_name.value], "recipe_id": recipe_name, "step_kind": step.kind, "duration": step.duration}
+            {"time": [step_time], "instruction": [step.instructions], "ingredients": [ingredients], "recipe": [recipe_name.value.name], "recipe_id": recipe_name, "step_kind": step.kind, "duration": step.duration}
         )])
     return df
 
@@ -205,8 +236,9 @@ def total_ingredients_for_recipe(recipe_name: Recipes) -> Dict[str, float]:
         if step.ingredients is None:
             continue
         for ingredient in step.ingredients:
+            label = f"{ingredient.unit} {ingredient.name}"
             try:
-                total_ingredients[ingredient.name] += ingredient.amount
+                total_ingredients[label] += ingredient.amount
             except KeyError:
-                total_ingredients[ingredient.name] = ingredient.amount
+                total_ingredients[label] = ingredient.amount
     return total_ingredients

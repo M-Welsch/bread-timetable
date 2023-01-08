@@ -1,2 +1,4 @@
 pandas
 icalendar
+jinja2
+latex

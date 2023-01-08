@@ -6,10 +6,11 @@ from typing import List, Dict
 import pandas as pd
 
 from timetable.bread_calendar import create_calendar
+from timetable.pdf_creator import create_pdf
 from timetable.recipe import Recipes, timetable_for_recipe, total_ingredients_for_recipe
 
 in_oven_times = {
-    Recipes.Haferbrot_2kg: datetime(2023, 1, 7, 13)
+    Recipes.Haferbrot_2kg: datetime(2023, 1, 14, 13)
 }
 
 
@@ -37,7 +38,8 @@ def main():
     baking_plan = [
         BakingPlanUnit(Recipes.DinkelQuarkBrot_2kg, in_oven_times[Recipes.Haferbrot_2kg]),
         BakingPlanUnit(Recipes.Haferbrot_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
-        BakingPlanUnit(Recipes.RoggenvollkornbrotMitRoestbrot_per_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
+        #BakingPlanUnit(Recipes.RoggenvollkornbrotMitRoestbrot_per_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
+        BakingPlanUnit(Recipes.RustikalesMischbrot, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
         BakingPlanUnit(Recipes.Holzofen, in_oven_times[Recipes.Haferbrot_2kg])
     ]
     timetable = pd.concat(
@@ -59,6 +61,7 @@ def main():
     print("\nTotal Ingredients:")
     for ingredient, amount in total_ingredients(baking_plan).items():
         print(f"{amount} {ingredient}")
+    create_pdf(baking_plan, timetable, total_ingredients(baking_plan))
 
 
 if __name__ == "__main__":
