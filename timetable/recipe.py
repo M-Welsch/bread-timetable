@@ -14,17 +14,17 @@ class RecipeData:
 
 
 class Recipes(Enum):
-    Holzofen = RecipeData("Holzofen Vorbereitung", "http://")
-    DinkelQuarkBrot_2kg = RecipeData("Dinkel-Quark-Brot", "http://")
+    Holzofen = RecipeData("Holzofen Vorbereitung", "https://www.backdorf.de/blog/Holzbackofen-richtig-aufheizen-backdorf/")
+    DinkelQuarkBrot_2kg = RecipeData("Dinkel-Quark-Brot", "")
     DinkelKastenBrot = RecipeData("Dinkel Kastenbrot", "http://")
-    Haferbrot_1kg = RecipeData("Haferbrot pro 1kg", "http://")
-    Haferbrot_2kg = RecipeData("Haferbrot 2kg", "http://")
-    Haferbrot_3kg = RecipeData("Haferbrot 3kg", "http://")
+    Haferbrot_1kg = RecipeData("Haferbrot pro 1kg", "https://www.ploetzblog.de/2015/09/19/reines-haferflockenbrot/")
+    Haferbrot_2kg = RecipeData("Haferbrot 2kg", "https://www.ploetzblog.de/2015/09/19/reines-haferflockenbrot/")
+    Haferbrot_3kg = RecipeData("Haferbrot 3kg", "https://www.ploetzblog.de/2015/09/19/reines-haferflockenbrot/")
     Auffrischbrot = RecipeData("Auffrischbrot", "http://")
     SauerteigBroetchen = RecipeData("Sauerteigbrötchen", "http://")
     RoggenvollkornbrotMitRoestbrot_per_1kg = RecipeData("Roggenvollkornbrot mit Röstbrot", "http://")
     RoggenvollkornbrotMitRoestbrot_per_2kg = RecipeData("Roggenvollkornbrot mit Röstbrot", "http://")
-    RustikalesMischbrot = RecipeData("Rustikales Mischbrot", "http://")
+    RustikalesMischbrot = RecipeData("Rustikales Mischbrot", "https://www.ploetzblog.de/2021/02/20/rustikales-mischbrot/")
 
 
 class StepKind(Enum):

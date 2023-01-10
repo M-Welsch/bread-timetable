@@ -29,9 +29,15 @@ TEMPLATE = r"""
   \newpage
   \section{Zeitplan}
   
-    {% for step in timesteps %}
-    \subsection*{ {{step[0]}}: {{step[1]}}}
-    {{step[2]}}: {{step[3]}}
+    {% for timestamp, recipe, instruction, ingredients in timesteps %}
+    \subsection*{ {{ timestamp }}: {{ recipe }}}
+    {{ instruction }}{% if ingredients %}
+        \begin{itemize}
+        {% for ingredient in ingredients %}
+            \item {{ingredient}}
+        {% endfor %}
+        \end{itemize}
+    {% endif %}
     {% endfor %}
     
   \newpage
@@ -64,7 +70,7 @@ def _create_steps(timetable: pd.DataFrame) -> List[List[str]]:
         steptime: datetime = row.time
         step = [steptime.strftime('%d.%m.%Y %H:%M:%S'), row.recipe, row.instruction]
         if row.ingredients:
-            step.append({row.ingredients})
+            step.append(row.ingredients.split(', '))
         else:
             step.append("")
         steps.append(step)
