@@ -10,7 +10,7 @@ from timetable.pdf_creator import create_pdf
 from timetable.recipe import Recipes, timetable_for_recipe, total_ingredients_for_recipe
 
 in_oven_times = {
-    Recipes.Haferbrot_2kg: datetime(2023, 1, 14, 13)
+    Recipes.SkaneKavring: datetime(2023, 4, 15, 12, 0)
 }
 
 
@@ -36,11 +36,13 @@ def total_ingredients(baking_plan: List[BakingPlanUnit]) -> Dict[str, float]:
 
 def main():
     baking_plan = [
-        BakingPlanUnit(Recipes.DinkelQuarkBrot_2kg, in_oven_times[Recipes.Haferbrot_2kg]),
-        BakingPlanUnit(Recipes.Haferbrot_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
+        #BakingPlanUnit(Recipes.DinkelQuarkBrot_800g, in_oven_times[Recipes.DinkelQuarkBrot_800g], multiplier=6),
+        #BakingPlanUnit(Recipes.Haferbrot_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=3),
+        BakingPlanUnit(Recipes.SkaneKavring, in_oven_times[Recipes.SkaneKavring], multiplier=1),
         #BakingPlanUnit(Recipes.RoggenvollkornbrotMitRoestbrot_per_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
-        BakingPlanUnit(Recipes.RustikalesMischbrot, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
-        BakingPlanUnit(Recipes.Holzofen, in_oven_times[Recipes.Haferbrot_2kg])
+        #BakingPlanUnit(Recipes.Auffrischbrot_per_1gASG, in_oven_times[Recipes.DinkelQuarkBrot_800g], multiplier=400),
+        # BakingPlanUnit(Recipes.RustikalesMischbrot, in_oven_times[Recipes.DinkelQuarkBrot_800g], multiplier=2),
+        #BakingPlanUnit(Recipes.Holzofen, in_oven_times[Recipes.DinkelQuarkBrot_800g])
     ]
     timetable = pd.concat(
         [timetable_for_recipe(bread.recipe_name, bread.in_oven_time, bread.multiplier) for bread in baking_plan]
