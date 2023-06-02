@@ -27,12 +27,17 @@ class Recipes(Enum):
     RoggenvollkornbrotMitRoestbrot_per_1kg = RecipeData("Roggenvollkornbrot mit Röstbrot", "http://")
     RoggenvollkornbrotMitRoestbrot_per_2kg = RecipeData("Roggenvollkornbrot mit Röstbrot", "http://")
     RustikalesMischbrot = RecipeData("Rustikales Mischbrot", "https://www.ploetzblog.de/2021/02/20/rustikales-mischbrot/")
-    SkaneKavring = RecipeData("Skane Kavring", "")
+    SkaneKavring = RecipeData("Skane Kavring", "siehe Rolands Rezept Buch")
+    Treberbrot = RecipeData("Treberbrot", "https://www.ploetzblog.de/2018/09/29/aarauer-treberbrot/"),
+    LeserwunschRustikalesBauernbrot = RecipeData("Leserwunsch: Rustikales Bauernbrot", "https://www.ploetzblog.de/2013/04/27/leserwunsch-rustikales-bauernbrot/")
+    Checker = RecipeData("Checker", "This is only for unit testing. Don't bake this.")
+    Checker2 = RecipeData("Checker2", "This is only for unit testing. Also don't bake this.")
 
 
 class StepKind(Enum):
     VERARBEITUNG: str = "VERARBEITUNG"
     WARTEN: str = "WARTEN"
+    BACKEN: str = "BACKEN"
 
 
 @dataclass
@@ -51,6 +56,68 @@ class Step:
 
 
 recipes = {
+    Recipes.LeserwunschRustikalesBauernbrot: [
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Sauerteig machen", ingredients=[
+            Ingredient(100, "g", "Roggenvollkornmehl"),
+            Ingredient(50, "g", "Roggenmehl Type 1150"),
+            Ingredient(150, "g", "Wasser (40°C)"),
+            Ingredient(15, "g", "Anstellgut (Roggen)")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=20)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=15), instructions="Alle Zutaten 5 Minuten auf niedrigster Stufe und weitere 2 Minuten auf zweiter Stufe zu einem leicht klebenden Teig verarbeiten (Teigtemperatur ca. 28°C)", ingredients=[
+            Ingredient(315, "g", "Sauerteig"),
+            Ingredient(300, "g", "Roggenmehl Type 1150"),
+            Ingredient(100, "g", "Weizenmehl Type 1050"),
+            Ingredient(50, "g", "Weizenvollkornmehl"),
+            Ingredient(175, "g", "Wasser (50°C)"),
+            Ingredient(9, "g", "Salz")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=2), instructions="Ausstoßen"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Rundwirken und in Gärkorb rein"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45)),
+        Step(kind=StepKind.BACKEN, duration=timedelta(minutes=45), instructions="Bei 250°C fallend auf 220°C mit Schluss nach oben 50 Minuten mit Dampf backen")
+    ],
+    Recipes.Treberbrot: [
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Weizensauer machen", ingredients=[
+            Ingredient(100, "g", "Weizenmehl Type 550"),
+            Ingredient(100, "g", "Wasser 45°C"),
+            Ingredient(10, "g", "Anstellgut (Weizen)")
+        ]),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Roggensauer machen", ingredients=[
+            Ingredient(100, "g", "Roggenmehl Type 997"),
+            Ingredient(100, "g", "Wasser 45°C"),
+            Ingredient(10, "g", "Anstellgut (Roggen)")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=14)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Autolyseteig machen", ingredients=[
+            Ingredient(600, "g", "Weizenmehl Type 550"),
+            Ingredient(400, "g", "Wasser 30°C"),
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=30)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=15), instructions="Hauptteig machen Schritt 1. 5 Minuten auf erster und 5 Minuten auf zweiter Stufe verkneten", ingredients=[
+            Ingredient(0, "", "Alle Vorteige"),
+            Ingredient(190, "g", "Weizenvollkornmehl"),
+            Ingredient(20, "g", "Salz")
+        ]),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=2), instructions="Treber 1-2 Minuten einkneten", ingredients=[
+            Ingredient(250, "g", "Treber")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=30)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=1), instructions="Dehnen und falten"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=30)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=1), instructions="Dehnen und falten"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=30)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=1), instructions="Dehnen und falten"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=30)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=1), instructions="Dehnen und falten"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=30)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=1), instructions="Dehnen und falten"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=30)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Langwirken, in Gärkörbe rein, abdecken und 20h bei 5°C reifen lassen, dann einschneiden und backen"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=24)),
+    ],
     Recipes.SkaneKavring: [
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Kochstück machen", ingredients=[
             Ingredient(95, "g", "Roggenmehl Type 1150"),
@@ -62,7 +129,7 @@ recipes = {
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Sauerteig machen", ingredients=[
             Ingredient(42, "g", "Roggenmehl Type 1150"),
             Ingredient(34, "g", "Wasser (ca. 40°C)"),
-            Ingredient(2, "g", "Anstellgut")
+            Ingredient(2, "g", "Anstellgut (Roggen)")
         ]),
         Step(kind=StepKind.WARTEN, duration=timedelta(hours=12)),
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Vorteig machen. 4 Min kneten", ingredients=[
@@ -77,13 +144,14 @@ recipes = {
             Ingredient(200, "g", "Zuckerrübensirup"),
             Ingredient(500, "g", "Roggenmehl Type 1150"),
             Ingredient(10, "g", "Flüssiger Butter zum Bestreichen (Mengenangabe willkürlich)"),
-        ])
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=90), instructions="Teig direkt in die Kastenform und 1,5h warten"),
     ],
     Recipes.DinkelQuarkBrot_2kg: [
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Sauerteig machen", ingredients=[
             Ingredient(100, "g", "Roggenmehl Type 1150"),
             Ingredient(100, "ml", "Wasser"),
-            Ingredient(10, "g", "Anstellgut")
+            Ingredient(10, "g", "Anstellgut (Roggen)")
         ]),
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Kochstück machen", ingredients=[
             Ingredient(190, "g", "Dinkelschrot"),
@@ -103,11 +171,11 @@ recipes = {
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Rundwirken"),
         Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45), instructions="Garen lassen")
     ],
-Recipes.DinkelQuarkBrot_800g: [
+    Recipes.DinkelQuarkBrot_800g: [
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Sauerteig machen", ingredients=[
             Ingredient(50, "g", "Roggenmehl Type 1150"),
             Ingredient(50, "ml", "Wasser"),
-            Ingredient(5, "g", "Anstellgut")
+            Ingredient(5, "g", "Anstellgut (Roggen)")
         ]),
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Kochstück machen", ingredients=[
             Ingredient(95, "g", "Dinkelschrot"),
@@ -152,7 +220,7 @@ Recipes.DinkelQuarkBrot_800g: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Sauerteig machen", [
             Ingredient(200, "g", "Roggenvollkornmehl"),
             Ingredient(200, "ml", "Wasser (50°)"),
-            Ingredient(40, "g", "Anstellgut"),
+            Ingredient(40, "g", "Anstellgut (Roggen)"),
             Ingredient(4, "g", "Salz"),
         ]),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Brühstück machen", [
@@ -191,7 +259,7 @@ Recipes.DinkelQuarkBrot_800g: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=10), "Sauerteig machen", [
             Ingredient(400, "g", "Roggenmehl Type 1150"),
             Ingredient(400, "ml", "Wasser (50°C)"),
-            Ingredient(80, "g", "Anstellgut"),
+            Ingredient(80, "g", "Anstellgut (Roggen)"),
             Ingredient(8, "g", "Salz")
         ]),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=10), "Vorteig machen", [
@@ -231,80 +299,21 @@ Recipes.DinkelQuarkBrot_800g: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=1), "In Kühlschrank"),
         Step(StepKind.WARTEN, timedelta(hours=13)),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Rund/Langwirken"),
-        Step(StepKind.WARTEN, timedelta(hours=1))
+        Step(StepKind.WARTEN, timedelta(hours=1)),
+        Step(StepKind.BACKEN, timedelta(minutes=45), instructions="Backen")
+    ],
+    Recipes.Checker: [
+        Step(StepKind.VERARBEITUNG, duration=timedelta(hours=1), instructions="Step1", ingredients=[
+            Ingredient(1, "g", "Boring one")
+        ]),
+        Step(StepKind.WARTEN, duration=timedelta(hours=1)),
+        Step(StepKind.VERARBEITUNG, timedelta(minutes=30), instructions="Step2", ingredients=[
+            Ingredient(2, "g", "another boring thing")
+        ]),
+        Step(StepKind.WARTEN, duration=timedelta(minutes=30)),
+        Step(StepKind.BACKEN, timedelta(minutes=45))
     ]
 }
-
-recipes_old = {
-    Recipes.Holzofen: OrderedDict({
-        "Abbrandphase: 1/3 Holz in vorderer Hälfte abbrennen. Ofentür in erste Rastung, 30min warten": timedelta(minutes=30),
-        "Abbrandphase: weiteres 1/3 Holz auf die Glut, 30min warten": timedelta(minutes=30),
-        "Glut überall verteilen, letztes 1/3 Holz drauf, 60min warten, Glut mehrmals aufhacken": timedelta(hours=1), 
-        "Sauber kehren, Tür zu. Pizza backen. Nach 1h Brot möglich": timedelta(hours=1)
-    }),
-    Recipes.DinkelKastenBrot: OrderedDict(
-        {
-            "Vorteig (260g Dinkel T630, 130g Wasser, 0,52g Hefe), Quellstück machen (66g Leinmehl, 260g Wasser, 26g Salz)": timedelta(hours=12),
-            "Teig mischen (1040g Dinkelmehl T630, 456g Wasser (40°), 10g Hefe, 26g Öl": timedelta(minutes=15),
-            "Teig ruhen lassen 1": timedelta(minutes=28),
-            "Dehnen und Falten 1": timedelta(minutes=2),
-            "Teig ruhen lassen 2": timedelta(minutes=28),
-            "Dehnen und Falten 2": timedelta(minutes=2),
-            "Teig ruhen lassen 3": timedelta(minutes=30),
-            "Langwirken, in Kastenform": timedelta(minutes=5),
-            "Reifen lassen": timedelta(minutes=90),
-        }
-    ),
-    Recipes.Auffrischbrot: OrderedDict(
-        {
-            "Erste Autolyse: 350g AG, 595g Wasser (25°C)": timedelta(minutes=30),
-            "Zweite Autolyse: erste Autolyse, 840g Mehl": timedelta(minutes=30),
-            "Hauptteig: Zw. Autolyse, 3,5g Hefe, 21g Salz": timedelta(minutes=40),
-            "In Kühlschrnak": timedelta(hours=10),
-            "Garen lassen": timedelta(minutes=60)
-        }
-    ),
-    Recipes.SauerteigBroetchen: OrderedDict({
-        "Sauerteig machen (20g AG, 25g Weizen T550, 20g Wasser), 4h stehen lassen": timedelta(hours=4),
-        "Vorteig verrühren (585g Weizen T550, 395g Wasser), 30min stehen lassen": timedelta(minutes=30),
-        "Hauptteig (Sauerteig, Vorteig) verkneten, dann 15g Salz dazu, nochmal kneten. 6h ruhen lassen)": timedelta(hours=6),
-        "9 Teiglinge formen, 60-90min ruhen lassen. Dann 25min bei 250°C OU Hitze backen": timedelta(minutes=60),
-
-    })
-}
-
-
-def calculate_start_time(steps: List[Step], in_oven_time: datetime) -> datetime:
-    total_timedelta = timedelta()
-    for td in [step.duration for step in steps]:
-        total_timedelta += td
-    return in_oven_time - total_timedelta  # - time_for_last_step
-
-
-def compose_ingredients(step: Step, multiplier: float) -> str:
-    if step.ingredients is not None:
-        return ", ".join([f"{ing.amount * multiplier}{ing.unit} {ing.name}" for ing in step.ingredients])
-    else:
-        return ""
-
-
-def timetable_for_recipe(recipe_name: Recipes, in_oven_time: datetime, multiplier: float = 1) -> pd.DataFrame:
-    start_time = calculate_start_time(recipes[recipe_name], in_oven_time)
-    time_elapsed = timedelta()
-    step_times = []
-    df = pd.DataFrame(
-        {"time": [], "instruction": [], "ingredients": [], "recipe": []}
-    )
-    for step in recipes[recipe_name]:
-        time_needed = step.duration
-        time_elapsed += time_needed
-        step_time = start_time + time_elapsed
-        step_times.append(step_time-time_needed)
-        ingredients = compose_ingredients(step, multiplier)
-        df = pd.concat([df, pd.DataFrame(
-            {"time": [step_time], "instruction": [step.instructions], "ingredients": [ingredients], "recipe": [recipe_name.value.name], "recipe_id": recipe_name, "step_kind": step.kind, "duration": step.duration}
-        )])
-    return df
 
 
 def total_ingredients_for_recipe(recipe_name: Recipes) -> Dict[str, float]:
