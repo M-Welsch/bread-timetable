@@ -29,15 +29,15 @@ TEMPLATE = r"""
   \newpage
   \section{Zeitplan}
   
-    {% for timestamp, recipe, instruction, ingredients in timesteps %}
-    \subsection*{ {{ timestamp }}: {{ recipe }}}
-    {{ instruction }}{% if ingredients %}
-        \begin{itemize}
-        {% for ingredient in ingredients %}
-            \item {{ingredient}}
-        {% endfor %}
-        \end{itemize}
-    {% endif %}
+    {% for timestep in timesteps %}
+        \subsection*{ {{ timestep.timestamp }}: {{ timestep.recipe }}}
+        {{ timestep.instruction }}{% if timestep.ingredients %}
+            \begin{itemize}
+            {% for ingredient in timestep.ingredients %}
+                \item {{ingredient}}
+            {% endfor %}
+            \end{itemize}
+        {% endif %}
     {% endfor %}
     
   \newpage
@@ -45,7 +45,7 @@ TEMPLATE = r"""
     \begin{itemize}
     
       {% for name, amount in ingredients.items() %}
-        \item {{amount}}{{name}}
+        \item {{'{0:0.1f}'.format(amount)}}{{name}}
       {% endfor %}
       
     \end{itemize}
@@ -59,7 +59,7 @@ def _create_recipe_overview(baking_plan) -> list:
         name = recipe.recipe_name.value.name
         url = recipe.recipe_name.value.url
         recipes.append(name + ": " + url)
-    return recipes
+        return recipes
 
 
 def _create_steps(timetable: pd.DataFrame) -> List[List[str]]:
@@ -67,12 +67,12 @@ def _create_steps(timetable: pd.DataFrame) -> List[List[str]]:
     for index, row in timetable.sort_values("time").iterrows():
         if not row.instruction:
             continue
-        steptime: datetime = row.time
-        step = [steptime.strftime('%d.%m.%Y %H:%M:%S'), row.recipe, row.instruction]
-        if row.ingredients:
-            step.append(row.ingredients.split(', '))
-        else:
-            step.append("")
+        step = {
+            "timestamp": row.time.strftime('%d.%m.%Y %H:%M:%S'),
+            "recipe": row.recipe,
+            "instruction": row.instruction,
+            "ingredients": row.ingredients.split(',') if row.ingredients else []
+        }
         steps.append(step)
     return steps
 

@@ -11,7 +11,7 @@ class RecipeError(Exception):
 
 def compose_ingredients(step: Step, multiplier: float) -> str:
     if step.ingredients is not None:
-        return ", ".join([f"{ing.amount * multiplier}{ing.unit} {ing.name}" for ing in step.ingredients])
+        return ", ".join([f"{(ing.amount * multiplier):.1f}{ing.unit} {ing.name}" for ing in step.ingredients])
     else:
         return ""
 
@@ -24,7 +24,7 @@ def create_timetable(recipe_name: Recipes, in_oven_time: datetime, multiplier: f
     table = pd.DataFrame({
         "time": [in_oven_time+baking_step.duration, in_oven_time],
         "instruction": ["Fertig", baking_step.instructions],
-        "ingredients": ["",""],
+        "ingredients": ["", ""],
         "recipe": [recipe_name.value.name, recipe_name.value.name],
         "recipe_id": [recipe_name, recipe_name],
         "step_kind": [StepKind.WARTEN, baking_step.kind],

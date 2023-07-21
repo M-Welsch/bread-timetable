@@ -19,8 +19,6 @@ class Recipes(Enum):
     DinkelQuarkBrot_800g = RecipeData("Dinkel-Quark-Brot", "")
     DinkelKastenBrot = RecipeData("Dinkel Kastenbrot", "http://")
     Haferbrot_1kg = RecipeData("Haferbrot pro 1kg", "https://www.ploetzblog.de/2015/09/19/reines-haferflockenbrot/")
-    Haferbrot_2kg = RecipeData("Haferbrot 2kg", "https://www.ploetzblog.de/2015/09/19/reines-haferflockenbrot/")
-    Haferbrot_3kg = RecipeData("Haferbrot 3kg", "https://www.ploetzblog.de/2015/09/19/reines-haferflockenbrot/")
     Auffrischbrot = RecipeData("Auffrischbrot", "http://")
     Auffrischbrot_per_1gASG = RecipeData("Auffrischbrot", "https://brotpoet.de/2017/11/30/auffrischbrot-nach-dietmar-kappl/")
     SauerteigBroetchen = RecipeData("Sauerteigbrötchen", "http://")
@@ -214,7 +212,8 @@ recipes = {
             Ingredient(266, "ml", "Wasser, dann 133g Wasser jew. 40°"),
             Ingredient(6.7, "g", "Hefe"),
         ]),
-        Step(StepKind.WARTEN, timedelta(minutes=60))
+        Step(StepKind.WARTEN, timedelta(minutes=60)),
+        Step(StepKind.BACKEN, timedelta(minutes=60), instructions="Backen bei viel Grad")
     ],
     Recipes.RoggenvollkornbrotMitRoestbrot_per_1kg: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Sauerteig machen", [

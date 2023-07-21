@@ -11,8 +11,7 @@ from timetable.recipe import Recipes, total_ingredients_for_recipe
 from timetable.calculation import create_timetable
 
 in_oven_times = {
-    Recipes.Auffrischbrot_per_1gASG: datetime(2023, 6, 3, 13, 30),
-    Recipes.LeserwunschRustikalesBauernbrot: datetime(2023, 6, 3, 14, 40),
+    Recipes.Auffrischbrot_per_1gASG: datetime(2023, 7, 21, 13),
 }
 
 
@@ -39,14 +38,13 @@ def total_ingredients(baking_plan: List[BakingPlanUnit]) -> Dict[str, float]:
 def main():
     baking_plan = [
         #BakingPlanUnit(Recipes.DinkelQuarkBrot_800g, in_oven_times[Recipes.DinkelQuarkBrot_800g], multiplier=6),
-        #BakingPlanUnit(Recipes.Haferbrot_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=3),
+        #BakingPlanUnit(Recipes.Haferbrot_1kg, in_oven_times[Recipes.Haferbrot_1kg], multiplier=2),
         #BakingPlanUnit(Recipes.SkaneKavring, in_oven_times[Recipes.SkaneKavring], multiplier=2),
         #BakingPlanUnit(Recipes.Treberbrot, in_oven_times[Recipes.Treberbrot], multiplier=2),
         #BakingPlanUnit(Recipes.RoggenvollkornbrotMitRoestbrot_per_1kg, in_oven_times[Recipes.Haferbrot_2kg], multiplier=2),
-        BakingPlanUnit(Recipes.Auffrischbrot_per_1gASG, in_oven_times[Recipes.Auffrischbrot_per_1gASG], multiplier=500),
+        BakingPlanUnit(Recipes.Auffrischbrot_per_1gASG, in_oven_times[Recipes.Auffrischbrot_per_1gASG], multiplier=330),
         # BakingPlanUnit(Recipes.RustikalesMischbrot, in_oven_times[Recipes.DinkelQuarkBrot_800g], multiplier=2),
         #BakingPlanUnit(Recipes.Holzofen, in_oven_times[Recipes.DinkelQuarkBrot_800g])
-        BakingPlanUnit(Recipes.LeserwunschRustikalesBauernbrot, in_oven_times[Recipes.LeserwunschRustikalesBauernbrot], multiplier=2)
     ]
     timetable = pd.concat(
         [create_timetable(bread.recipe_name, bread.in_oven_time, bread.multiplier) for bread in baking_plan]
@@ -67,7 +65,7 @@ def main():
 
     print("\nTotal Ingredients:")
     for ingredient, amount in total_ingredients(baking_plan).items():
-        print(f"{amount} {ingredient}")
+        print(f"{amount:.1f} {ingredient}")
     create_pdf(baking_plan, timetable, total_ingredients(baking_plan))
 
 
