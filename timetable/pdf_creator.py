@@ -1,9 +1,35 @@
 from datetime import datetime
+from pathlib import Path
 from typing import List
 
 import pandas as pd
 from latex import build_pdf
 from jinja2 import Environment
+
+TEMPLATE_MD = r"""
+# Rezepte
+
+{% for recipe in recipes %}
+- {{recipe}}
+{% endfor %}
+
+# Zeitplan
+{% for timestep in timesteps %}
+## { {{ timestep.timestamp }}: {{ timestep.recipe }}}
+
+{{ timestep.instruction }} {% if timestep.ingredients %}
+{% for ingredient in timestep.ingredients %}
+- {{ingredient}}
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+
+# Zutaten
+{% for name, amount in ingredients.items() %}
+- {{'{0:0.1f}'.format(amount)}}{{name}}
+{% endfor %}
+"""
 
 TEMPLATE = r"""
 \documentclass{article}
@@ -84,4 +110,15 @@ def create_pdf(baking_plan: list, timetable: pd.DataFrame, ingredients: dict):
         timesteps=_create_steps(timetable)
     )
     pdf = build_pdf(doc)
-    pdf.save_to("Backplan.pdf")
+    today = datetime.now().strftime('%Y-%m-%d')
+    pdf.save_to(f"{today}_Backplan.pdf")
+
+
+def create_md(baking_plan: list, timetable: pd.DataFrame, ingredients: dict, savedir: Path):
+    doc = Environment().from_string(TEMPLATE_MD).render(
+        recipes=_create_recipe_overview(baking_plan),
+        ingredients=ingredients,
+        timesteps=_create_steps(timetable)
+    )
+    with open(savedir/f"{datetime.now().strftime('%Y-%d-%m')} Backsession") as f:
+        f.write(doc)

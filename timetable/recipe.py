@@ -28,6 +28,11 @@ class Recipes(Enum):
     SkaneKavring = RecipeData("Skane Kavring", "siehe Rolands Rezept Buch")
     Treberbrot = RecipeData("Treberbrot", "https://www.ploetzblog.de/2018/09/29/aarauer-treberbrot/"),
     LeserwunschRustikalesBauernbrot = RecipeData("Leserwunsch: Rustikales Bauernbrot", "https://www.ploetzblog.de/2013/04/27/leserwunsch-rustikales-bauernbrot/")
+    VeganesLaugengebaeck = RecipeData("Veganes Laugengebäck pro Stück (ca. 100g)", "https://www.ploetzblog.de/rezepte/veganes-laugengebaeck/id=61d41a8154477a2938bc6e70")
+    Pizzateig = RecipeData("Pizzateig", "http://www.perfekte-pizza.de/perfekter-pizzateig/")
+    RoggenvollkornKastenbrot = RecipeData("Roggenvollkorn Kastenbrot", "Brotbackbuch, Seite 54")
+    Stockbrot = RecipeData("Stockbrot", "https://www.ploetzblog.de/rezepte/stockbrot/id=6253fc47194ceb174cdd0e84")
+    Krapfen = RecipeData("Krapfen", "Buch von Jo Semola")
     Checker = RecipeData("Checker", "This is only for unit testing. Don't bake this.")
     Checker2 = RecipeData("Checker2", "This is only for unit testing. Also don't bake this.")
 
@@ -54,6 +59,97 @@ class Step:
 
 
 recipes = {
+    Recipes.Krapfen: [
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=20), instructions="Alle Zutaten 10-12 Minuten zu einem glatten Teig verkneten", ingredients=[
+            Ingredient(16.25, "g", "Vollmilch"),
+            Ingredient(33.125, "g", "Weizenmehl Type 550"),
+            Ingredient(1.25, "g", "Zucker"),
+            Ingredient(1.125, "g", "Hefe"),
+            Ingredient(3.75, "g", "Butter"),
+            Ingredient(0.5626, "g", "Salz"),
+            Ingredient(1, "g", "Mark einer Vanilleschote"),
+            Ingredient(0.25, "g", "Eigelb"),
+            Ingredient(3.125, "g", "Anstellgut (Optional)"),
+            Ingredient(5/16, "g", "Backmalz (aktiv) (optional)")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=30), instructions="30 Minuten bei Raumtemperatur ruhen lassen"),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=15), instructions="In Portionen à 60g teilen. Die Teiglinge rund formen"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=4), instructions="mit Schluss nach unten in einem leicht bemehlten Tuch 4 Stunden bei Raumtemperatur ruhen lassen"),
+        Step(kind=StepKind.BACKEN, duration=timedelta(minutes=10), instructions="In eine Pfanne mit hohem Rand oder einer Fritteuse reichlich Öl auf 170-180°C erhitzen. Die aufgegangenen Teiglinge mit dem Schluss nach oben in das heiße Öl gleiten lassen und von beiden Seiten je 2-3 Minuten goldgelb frittieren. In Portionen frittieren, damit die Teiglinge sich nicht berühren und das Öl nicht zu stark abkühlt")
+    ],
+    Recipes.Stockbrot: [
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Vorteig miaschen", ingredients=[
+            Ingredient(5.8, "g", "Weizenvollkornmehl"),
+            Ingredient(5.8, "g", "Wasser"),
+            Ingredient(0.006, "g", "Hefe")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=20)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=15), instructions="Kneten", ingredients=[
+            Ingredient(0.46, "g", "Salz"),
+            Ingredient(1, "g", "Estragon Majoran Thymian (Menge nach Gefühl)"),
+            Ingredient(8.7*0.96, "g", "Wasser (15°C)"),
+            Ingredient(0.46, "g", "Sonnenblumenöl"),
+            Ingredient(16.2, "g", "Weizenmehl Type 550"),
+            Ingredient(2.3, "g", "altes Weizenanstellgut TA200 (weich)"),
+            Ingredient(11.6, "g", "Vorteig"),
+            Ingredient(0.23, "g", "Hefe")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=14), instructions="bei 5°C 12-24h reifen lassen"),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=20), instructions="Teiglinge zu je 40g abstechen, in ca. 30cm lange Stränge mit viel Mehl ausrollen. Teiglinge in Mehl wälzen, auf ein gut bemehltes Blech setzen"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=10), instructions="2-10h bei 5°C reifen lassen"),
+        Step(kind=StepKind.BACKEN, duration=timedelta(minutes=5), instructions="knapp über Flamme 5min backen")
+    ],
+    Recipes.Pizzateig: [
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Rühren bis eine Masse entsteht, die von der Konsistenz eher an Pfannkuchenteig als an Pizzateig erinnert", ingredients=[
+            Ingredient(600, "g", "Weizenmehl Type 405"),
+            Ingredient(625, "g", "Wasser (kalt)"),
+            Ingredient(10, "g", "Hefe"),
+            Ingredient(40, "g", "Salz")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=20), instructions="Abdecken und 20 min warten"),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=4), instructions="Rühren"),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="restliches Mehl in ca. 100g Portionen einkneten", ingredients=[
+            Ingredient(400, "g", "Weizenmehl Type 405")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=20), instructions="Abdecken und 20 min warten"),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=20), instructions="Teig in ca. 270g große Stücke aufteilen, Rundwirken, dann in Kühlschrank"),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=24)),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Pizza machen"),
+        Step(kind=StepKind.BACKEN, duration=timedelta(minutes=5))
+    ],
+    Recipes.VeganesLaugengebaeck: [
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=10), instructions="Vorteig machen. Teigtemperatur 18°C", ingredients=[
+            Ingredient(15, "g", "Wasser 15°C"),
+            Ingredient(6.1, "g", "Dinkelvollkornmehl"),
+            Ingredient(6.1, "g", "Weizenvollkornmehl"),
+            Ingredient(3.1, "g", "Roggenmehl Type 1150"),
+            Ingredient(0.31, "g", "Hefe")
+        ]),
+        Step(kind=StepKind.WARTEN, duration=timedelta(hours=12), instructions="bei 5°C reifen lassen"),
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=15), instructions="Zu einem Teig vermischen, Teigtemperatu etwa 22°C", ingredients=[
+            Ingredient(1.2, "g", "Salz"),
+            Ingredient(18, "g", "Wasser (20°C)"),
+            Ingredient(3.1, "g", "Sonnenblumenöl"),
+            Ingredient(43, "g", "Weizenmehl Type 550"),
+            Ingredient(3.1, "g", "Sauerteigpulver"),
+            Ingredient(0.31, "g", "Hefe")
+        ]),
+        Step(StepKind.WARTEN, duration=timedelta(hours=1), instructions="bei 20°C reifen lassen"),
+        Step(StepKind.VERARBEITUNG, duration=timedelta(minutes=15), instructions="Teiglinge zu je 100g abstechen, straff rundschleifen, dann 15min mit Schluss nach unten auf unbemehlter Arbeitsfläche zugedeckt entspannen lassen"),
+        Step(StepKind.WARTEN, duration=timedelta(minutes=15)),
+        Step(StepKind.VERARBEITUNG, duration=timedelta(minutes=15), instructions="Formen"),
+        Step(StepKind.WARTEN, duration=timedelta(hours=1)),
+        Step(StepKind.WARTEN, duration=timedelta(minutes=15), instructions="offen anhauten lassen"),
+        Step(StepKind.VERARBEITUNG, duration=timedelta(minutes=15), instructions="laugen, mit Salz bestreuen"),
+        Step(StepKind.BACKEN, duration=timedelta(minutes=12), instructions="Backen")
+    ],
+    Recipes.SauerteigBroetchen: [
+        Step(kind=StepKind.VERARBEITUNG, duration=timedelta(hours=3, minutes=30), instructions="Sauerteig machen", ingredients=[
+            Ingredient(20, "g", "Anstellgut Weizen"),
+            Ingredient(25, "g", "Weizenmehl Type 550"),
+            Ingredient(20, "g", "Wasser")
+        ])  # to be finished
+    ],
     Recipes.LeserwunschRustikalesBauernbrot: [
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Sauerteig machen", ingredients=[
             Ingredient(100, "g", "Roggenvollkornmehl"),
@@ -167,7 +263,8 @@ recipes = {
         ]),
         Step(kind=StepKind.WARTEN, duration=timedelta(minutes=60)),
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Rundwirken"),
-        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45), instructions="Garen lassen")
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45), instructions="Garen lassen"),
+        Step(kind=StepKind.BACKEN, duration=timedelta(minutes=60), instructions="Backen"),
     ],
     Recipes.DinkelQuarkBrot_800g: [
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Sauerteig machen", ingredients=[
@@ -191,7 +288,8 @@ recipes = {
         ]),
         Step(kind=StepKind.WARTEN, duration=timedelta(minutes=60)),
         Step(kind=StepKind.VERARBEITUNG, duration=timedelta(minutes=5), instructions="Rundwirken"),
-        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45), instructions="Garen lassen")
+        Step(kind=StepKind.WARTEN, duration=timedelta(minutes=45), instructions="Garen lassen"),
+        Step(kind=StepKind.BACKEN, duration=timedelta(minutes=60), instructions="Backen")
     ],
     Recipes.Haferbrot_1kg: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Sauerteig machen", [
@@ -231,12 +329,13 @@ recipes = {
         Step(StepKind.VERARBEITUNG, timedelta(minutes=20), "Hauptteig machen", [
             Ingredient(444, "g", "Sauerteig"),
             Ingredient(307, "g", "Brühstück"),
-            Ingredient(560, "g", "Roggenvollkornmehl"),
-            Ingredient(220, "ml", "Wasser (100°C)"),
+            Ingredient(280, "g", "Roggenvollkornmehl"),
+            Ingredient(110, "ml", "Wasser (100°C)"),
         ]),
         Step(StepKind.WARTEN, timedelta(minutes=30)),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=10), "Rundwirken und in Gärkorb rein"),
-        Step(StepKind.WARTEN, timedelta(minutes=90))
+        Step(StepKind.WARTEN, timedelta(minutes=90)),
+        Step(StepKind.BACKEN, timedelta(minutes=60), instructions="Backen")
     ],
     Recipes.Holzofen: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "In vorderer Hälfte anbrennen, Ofentür in erste Rastung", [
@@ -252,7 +351,8 @@ recipes = {
         ]),
         Step(StepKind.WARTEN, timedelta(minutes=60)),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=2), "Sauber kehren, Tür zu"),
-        Step(StepKind.WARTEN, timedelta(minutes=60))
+        Step(StepKind.WARTEN, timedelta(minutes=60)),
+        Step(StepKind.BACKEN, timedelta(minutes=120))
     ],
     Recipes.RustikalesMischbrot: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=10), "Sauerteig machen", [
@@ -277,6 +377,7 @@ recipes = {
         Step(StepKind.WARTEN, timedelta(minutes=30)),
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "In Gärkorb"),
         Step(StepKind.WARTEN, timedelta(minutes=75)),
+        Step(StepKind.BACKEN, timedelta(hours=1))
     ],
     Recipes.Auffrischbrot_per_1gASG: [
         Step(StepKind.VERARBEITUNG, timedelta(minutes=5), "Erste Autolyse", [
